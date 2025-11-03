@@ -2,9 +2,11 @@ import { ErrorCode, McpError } from "@modelcontextprotocol/sdk/types.js";
 import { type, type Type } from "arktype";
 import { logger } from "./logger";
 
-// Default to HTTPS port, fallback to HTTP if specified
+// Default to HTTPS port, allow override via env vars
 const USE_HTTP = process.env.OBSIDIAN_USE_HTTP === "true";
-const PORT = USE_HTTP ? 27123 : 27124;
+const HTTP_PORT = Number(process.env.OBSIDIAN_HTTP_PORT ?? process.env.OBISIDIAN_HTTP_PORT) || 27123;
+const HTTPS_PORT = Number(process.env.OBSIDIAN_HTTPS_PORT ?? process.env.OBISIDIAN_HTTPS_PORT) || 27124;
+const PORT = USE_HTTP ? HTTP_PORT : HTTPS_PORT;
 const PROTOCOL = USE_HTTP ? "http" : "https";
 const HOST = process.env.OBSIDIAN_HOST || "127.0.0.1";
 export const BASE_URL = `${PROTOCOL}://${HOST}:${PORT}`;
